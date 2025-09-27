@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Gift for My Friend Druv</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the gift box animation */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Dancing+Script:wght@700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Cheerful blue background */
+            background-color: #dbeafe; /* Tailwind sky-200 equivalent */
+            /* Added a subtle leafy pattern effect using CSS gradients (optional complex texture) */
+            background-image: radial-gradient(circle, #bfdbfe 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* Styling for the main content area (where the gift is) to act as a 'canvas' */
+        .gift-canvas {
+            /* Leaf-vein suggestion: Subtle green border/shadow around the card area */
+            box-shadow: 0 0 50px 20px rgba(16, 185, 129, 0.4), /* Primary Emerald Green blur */
+                        0 0 30px 10px rgba(52, 211, 153, 0.3); /* Lighter green hint */
+            background-color: white; /* White card background for contrast */
+            padding: 3rem;
+            border-radius: 20px;
+        }
+
+        /* Container for the gift box parts */
+        .gift-container {
+            position: relative;
+            width: 300px;
+            height: 250px;
+            perspective: 1000px; /* For 3D rotation */
+        }
+
+        /* The Box Base */
+        .gift-base {
+            width: 100%;
+            height: 100%;
+            background: #e74c3c; /* Bright Red */
+            border: 4px solid #c0392b;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 12px;
+            padding: 20px;
+            transition: transform 0.5s ease-in-out;
+            transform-origin: bottom;
+        }
+
+        /* The Box Lid */
+        .gift-lid {
+            width: 110%;
+            height: 50px;
+            background: #c0392b; /* Darker Red */
+            border: 4px solid #992d22;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            position: absolute;
+            top: -20px;
+            left: -5%;
+            z-index: 10;
+            border-radius: 8px;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-origin: 50% 100%;
+            cursor: pointer;
+        }
+
+        /* The decorative ribbon on the lid */
+        .ribbon {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 30px;
+            height: 100%;
+            background: #f1c40f; /* Gold ribbon */
+            transform: translateX(-50%);
+            z-index: 11;
+        }
+
+        .ribbon::before, .ribbon::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            width: 30px;
+            height: 30px;
+            background: #f39c12; /* Darker Gold for bow part */
+            border-radius: 50%;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .ribbon::before { left: -30px; }
+        .ribbon::after { right: -30px; }
+
+        /* Lid open state */
+        .gift-lid.open {
+            transform: translateZ(50px) rotateX(-90deg) translateY(-20px);
+        }
+
+        /* Message style */
+        .gift-message {
+            opacity: 0;
+            transition: opacity 1s 0.7s;
+            font-family: 'Dancing Script', cursive;
+            color: #333;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .gift-message.visible {
+            opacity: 1;
+        }
+
+        /* Confetti effect styles */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #ffd700;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 1.8s ease-out;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <!-- The gift-canvas class adds the leafy-style green shadow -->
+    <!-- Added 'relative' class to main so absolute positioning of side text works -->
+    <main class="w-full max-w-md flex flex-col items-center gift-canvas relative">
+
+        <!-- LEFT SIDE TEXT: HAPPY BIRTHDAY DRUV -->
+        <div class="absolute top-1/2 left-4 sm:left-[-120px] transform -translate-y-1/2 -rotate-90 origin-center text-4xl font-black text-red-500 opacity-70 tracking-widest hidden md:block">
+            HAPPY BIRTHDAY DRUV
+        </div>
+
+        <!-- RIGHT SIDE TEXT: HAPPY BIRTHDAY DRUV -->
+        <div class="absolute top-1/2 right-4 sm:right-[-120px] transform -translate-y-1/2 rotate-90 origin-center text-4xl font-black text-red-500 opacity-70 tracking-widest hidden md:block">
+            HAPPY BIRTHDAY DRUV
+        </div>
+
+        <!-- Main Title -->
+        <h1 id="main-title" class="text-3xl sm:text-4xl font-black text-gray-800 mb-8 text-center transition-opacity duration-500">
+            A Special Gift for You!
+        </h1>
+
+        <!-- The Gift Box Assembly -->
+        <div id="gift-box" class="gift-container">
+            <!-- Gift Base (holds the message) -->
+            <div class="gift-base flex flex-col justify-center items-center">
+                <!-- Birthday Message (initially hidden) -->
+                <p id="message-text" class="gift-message">
+                    Happy Birthday! 🎉<br>
+                    Sending you all the happiness and good vibes in the world. Cheers to a wonderful year ahead!<br>
+                    <!-- Closing message -->
+                    <span class="font-black text-2xl mt-4 block text-yellow-300" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">From your best friend</span>
+                </p>
+                <!-- Click Prompt (initially visible) -->
+                <p id="click-prompt" class="text-white text-xl font-bold transition-opacity duration-300">
+                    Click the box to open!
+                </p>
+            </div>
+
+            <!-- Gift Lid (clickable) -->
+            <div id="gift-lid" class="gift-lid shadow-xl transition-all duration-500">
+                <div class="ribbon"></div>
+                <!-- Lid Title -->
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                     <span class="text-white font-extrabold text-2xl tracking-widest" style="text-shadow: 0 0 5px rgba(0,0,0,0.5);">GIFT</span>
+                </div>
+            </div>
+        </div>
+
+        <button id="reset-button" class="mt-12 px-6 py-3 bg-indigo-500 text-white font-semibold rounded-full shadow-xl hover:bg-indigo-600 transition duration-300 opacity-0 pointer-events-none" onclick="resetGift()">
+            Re-wrap Gift
+        </button>
+
+    </main>
+
+    <script>
+        // Global variables
+        const giftLid = document.getElementById('gift-lid');
+        const messageText = document.getElementById('message-text');
+        const clickPrompt = document.getElementById('click-prompt');
+        const giftBase = document.getElementById('gift-base');
+        const mainTitle = document.getElementById('main-title');
+        const resetButton = document.getElementById('reset-button');
+        let isOpened = false;
+
+        /**
+         * Converts a numerical value to a delay string for CSS transition.
+         * @param {number} ms - milliseconds
+         * @returns {string} - delay string like '0.5s'
+         */
+        function msToSeconds(ms) {
+            return `${ms / 1000}s`;
+        }
+
+        /**
+         * Generates and animates confetti particles (Party Popper Effect).
+         */
+        function sprinkleConfetti() {
+            const colors = ['#ff6b6b', '#ffe66d', '#4ecdc4', '#47a8bd', '#f7f0e8', '#9b59b6', '#34d399']; // Added a green tone
+            const container = giftBase.parentElement;
+            const fragment = document.createDocumentFragment();
+            const count = 75;
+
+            for (let i = 0; i < count; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+                // Varying shapes (square or rounded)
+                if (Math.random() > 0.5) {
+                    confetti.style.borderRadius = '50%';
+                } else {
+                    confetti.style.borderRadius = '2px';
+                }
+
+                // Initial position relative to the box center
+                const startX = (container.offsetWidth / 2) + (Math.random() * 80 - 40);
+                const startY = (container.offsetHeight / 2);
+
+                confetti.style.left = `${startX}px`;
+                confetti.style.top = `${startY}px`;
+                confetti.style.width = confetti.style.height = `${Math.random() * 8 + 4}px`; // Random size
+
+                // Final position (flying out higher and wider for a popper effect)
+                const finalX = startX + (Math.random() * 600 - 300);
+                const finalY = startY - (Math.random() * 450 + 100);
+                const rotation = Math.random() * 720;
+                const delay = Math.random() * 300;
+
+                fragment.appendChild(confetti);
+
+                setTimeout(() => {
+                    confetti.style.transitionDelay = msToSeconds(delay);
+                    confetti.style.opacity = 1;
+                    confetti.style.transform = `translate(${finalX - startX}px, ${finalY - startY}px) rotate(${rotation}deg)`;
+                }, 50);
+
+                setTimeout(() => {
+                    confetti.remove();
+                }, 1800 + delay);
+            }
+            container.appendChild(fragment);
+        }
+
+
+        /**
+         * Handles the opening of the gift box.
+         */
+        function openGift() {
+            if (isOpened) return;
+            isOpened = true;
+
+            // 1. Animate the lid
+            giftLid.classList.add('open');
+            giftLid.style.cursor = 'default';
+
+            // 2. Hide the prompt and reveal the message
+            clickPrompt.style.opacity = '0';
+            setTimeout(() => {
+                clickPrompt.classList.add('hidden');
+                messageText.classList.add('visible');
+            }, 300);
+
+            // 3. Change the main title
+            mainTitle.textContent = "It's For You, Druv!";
+
+            // 4. Trigger the confetti effect (Party Popper!)
+            setTimeout(sprinkleConfetti, 500);
+
+            // 5. Show the reset button
+            setTimeout(() => {
+                resetButton.classList.remove('opacity-0', 'pointer-events-none');
+            }, 1000);
+        }
+
+        /**
+         * Resets the gift box state.
+         */
+        function resetGift() {
+            if (!isOpened) return;
+            isOpened = false;
+
+            // 1. Re-wrap the lid
+            giftLid.classList.remove('open');
+            giftLid.style.cursor = 'pointer';
+
+            // 2. Hide the message and show the prompt
+            messageText.classList.remove('visible');
+            setTimeout(() => {
+                clickPrompt.classList.remove('hidden');
+                clickPrompt.style.opacity = '1';
+            }, 500); // Wait for lid to close mostly
+
+            // 3. Reset the main title
+            mainTitle.textContent = "A Special Gift for You!";
+
+            // 4. Hide the reset button
+            resetButton.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        // Attach event listener
+        giftLid.addEventListener('click', openGift);
+        giftBase.addEventListener('click', openGift);
+    </script>
+</body>
+</html>
